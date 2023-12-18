@@ -1,10 +1,28 @@
 import React, { useState } from "react"
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export default function NotaEditor() {
 
   const [texto, setTexto] = useState("")
   const [modalVisivel, setModalVisivel] = useState(false)
+
+  async function salvaNota(){
+    const umaNota = {
+      id: "1",
+      texto: texto
+    }
+    try {
+      await AsyncStorage.setItem(umaNota.id, umaNota.texto)
+    } catch (e) {
+      console.log(e);
+    }
+    mostraNota()
+  }
+
+  async function mostraNota(){
+    console.log(await AsyncStorage.getItem("1"))
+  }
 
   return(
     <>
@@ -28,7 +46,7 @@ export default function NotaEditor() {
                 value={texto}/>
               <View style={estilos.modalBotoes}>
                 <TouchableOpacity style={estilos.modalBotaoSalvar}>
-                  <Text style={estilos.modalBotaoTexto}>Salvar</Text>
+                  <Text style={estilos.modalBotaoTexto} onPress={() => {salvaNota()}}>Salvar</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => {setModalVisivel(false)}}>
                   <Text style={estilos.modalBotaoTexto}>Cancelar</Text>
