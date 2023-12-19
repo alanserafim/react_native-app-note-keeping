@@ -1,27 +1,37 @@
 import React, { useState } from "react"
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { cores } from "../global/estilos"
 
-export default function NotaEditor() {
+export default function NotaEditor({ mostraNotas }) {
 
   const [texto, setTexto] = useState("")
   const [modalVisivel, setModalVisivel] = useState(false)
 
   async function salvaNota(){
+    const novoId = await geraId()
     const umaNota = {
-      id: "1",
+      id: novoId.toString(),
       texto: texto
     }
+    console.log(umaNota);
     try {
       await AsyncStorage.setItem(umaNota.id, umaNota.texto)
     } catch (e) {
       console.log(e);
     }
-    mostraNota()
+    
   }
 
-  async function mostraNota(){
-    console.log(await AsyncStorage.getItem("1"))
+  async function mostraNota(id){
+    console.log(await AsyncStorage.getItem(id.toString()))
+  }
+
+  async function geraId(){
+    const todasChaves = await AsyncStorage.getAllKeys()
+    console.log(todasChaves);
+    if(todasChaves.length <= 0) return 1
+    return todasChaves.length +1
   }
 
   return(
@@ -41,7 +51,7 @@ export default function NotaEditor() {
                 style={estilos.modalInput}
                 multiline={true}
                 numberOfLines={3}
-                onChangeText={novoTexto => setTexto(novoTexto)}
+                onChangeText={setTexto}
                 placeholder="Digite aqui seu lembrete"
                 value={texto}/>
               <View style={estilos.modalBotoes}>
@@ -76,6 +86,7 @@ const estilos = StyleSheet.create({
     paddingBottom: 32,
     marginTop: 8,
     marginHorizontal: 16,
+    marginVertical: 16,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
     shadowColor: "#000",
@@ -115,7 +126,7 @@ const estilos = StyleSheet.create({
     justifyContent: "space-between"
   },
   modalBotaoSalvar: {
-    backgroundColor: "#2ea805",
+    backgroundColor: cores.azulClaro,
     borderRadius: 5,
     padding: 8,
     width: 80,
@@ -129,7 +140,7 @@ const estilos = StyleSheet.create({
     alignItems: "center",
   },
   modalBotaoCancelar: {
-    backgroundColor: "#057fa8",
+    backgroundColor: cores.amareloEscuro,
     borderRadius: 5,
     padding: 8,
     width: 80,
