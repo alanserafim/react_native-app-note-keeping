@@ -29,13 +29,13 @@ export async function obterTodasKeys(){
     } catch(e) {
       console.log(e);
     }
-    console.log(keys)
 }
 
 export async function obterConjuntoDados(allKeys){
     let values
     try {
         values = await AsyncStorage.multiGet(allKeys)
+        return values
     } catch(e) {
         console.log(e);
     }

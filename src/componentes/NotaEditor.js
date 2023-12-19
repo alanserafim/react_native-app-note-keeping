@@ -20,7 +20,7 @@ export default function NotaEditor({ mostraNotas }) {
     } catch (e) {
       console.log(e);
     }
-    
+    mostraNotas()
   }
 
   async function mostraNota(id){
